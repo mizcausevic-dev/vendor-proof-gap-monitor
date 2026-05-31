@@ -1,40 +1,22 @@
 # Vendor Proof Gap Monitor
 
-Executive proof-gap surface for claim coverage, evidence freshness, benchmark confidence, and reuse safety across the Kinetic Gain executive-intelligence estate.
+Executive proof-g
 
-- Live: `https://proofgap.kineticgain.com/`
-- Repo: `mizcausevic-dev/vendor-proof-gap-monitor`
+---
 
-## What it does
-- maps proof packs to owners, audiences, blockers, and next moves
-- keeps claim coverage, evidence freshness, benchmark confidence, and reuse safety in one lane
-- separates reusable, refresh-needed, at-risk, and blocked proof rooms before the next board, investor, or buyer review
-- exposes the same proof posture through HTML, JSON APIs, screenshots, and a reproducible CLI
+## Sister tools in the Sales Enablement Stack
 
-## Routes
-- `/`
-- `/proof-lane`
-- `/gap-matrix`
-- `/reuse-posture`
-- `/verification`
-- `/docs`
+This tool is one of four operator surfaces that compress the cycle time of vendor-diligence response. Use them together for a full buyer-facing readiness flow.
 
-## Local run
-```powershell
-cd vendor-proof-gap-monitor
-npm install
-npm run verify
-npm run prerender
-npm run render:assets
-```
+| Surface | What it does | Subdomain |
+|---|---|---|
+| **Vendor Proof Gap Monitor** | Claim coverage, evidence freshness, benchmark confidence, reuse safety | [proofgap.kineticgain.com](https://proofgap.kineticgain.com/) |
+| **Trust Center Evidence Room** | Evidence packaging, artifact freshness, review readiness, buyer-safe diligence posture | [trust.kineticgain.com](https://trust.kineticgain.com/) |
+| **Security Questionnaire Answer Studio** | Answer library, response ownership, cycle-time reduction, trust-evidence reuse | [questionnaire.kineticgain.com](https://questionnaire.kineticgain.com/) |
+| **RFP Response Assembler** | RFP coverage, differentiation, evidence reuse, submission readiness | [rfp.kineticgain.com](https://rfp.kineticgain.com/) |
 
-## CLI
-```powershell
-npx vendor-proof-gap-monitor fixtures/vendor-proof-gap-monitor.json --format summary
-npx vendor-proof-gap-monitor fixtures/vendor-proof-gap-monitor-clean.json --format json
-```
+All four are seller-side counterparts to the buyer-trust tooling at [kineticgain.com/trust/](https://kineticgain.com/trust/) (8 free browser-only AI diligence tools). Symmetric buyer/seller flow: customers use `/trust/` to draft their diligence asks; vendors use the Sales Enablement Stack to respond.
 
-## Verification
-- synthetic sample data only
-- no live board packets, diligence rooms, or private enterprise proof artifacts
-- all routes and packets are generated from the sample export in this repo
+All four hardened to `v1.0-prod` on 2026-05-31. All four dogfooded with [8 real Kinetic Gain product families](https://github.com/mizcausevic-dev/vendor-proof-gap-monitor/blob/main/src/data/sampleVerticalBrief.ts) as the live demo dataset — what you see when you visit the live URLs is what Kinetic Gain itself uses internally.
+
+Part of the [Kinetic Gain portfolio](https://portfolio.kineticgain.com/) (13 named platforms · 60+ v1.0-prod operator surfaces).
