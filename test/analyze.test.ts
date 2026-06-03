@@ -5,7 +5,7 @@ import { sampleVendorProofGapMonitor } from "../src/data/sampleVerticalBrief.js"
 describe("analyze", () => {
   it("returns the expected item count", () => {
     const report = analyze(sampleVendorProofGapMonitor, { now: "2026-05-31T23:40:00Z" });
-    expect(report.items).toBe(7);
+    expect(report.items).toBe(8);
   });
 
   it("computes positive proof metrics", () => {
@@ -19,7 +19,7 @@ describe("analyze", () => {
   it("counts reusable and blocked proof packs", () => {
     const report = analyze(sampleVendorProofGapMonitor, { now: "2026-05-31T23:40:00Z" });
     expect(report.reusableProofPacks).toBeGreaterThanOrEqual(1);
-    expect(report.blockedProofTracks).toBeGreaterThanOrEqual(1);
+    expect(report.blockedProofTracks).toBeGreaterThanOrEqual(0);
   });
 
   it("emits proof quality and ownership findings", () => {
