@@ -310,7 +310,10 @@ export function renderProofLane() {
 }
 
 export function renderGapMatrix() {
-  const rows = gapMatrix()
+  const matrix = gapMatrix();
+  const executiveSummary = summary();
+  const weakestCoverage = [...matrix].sort((a, b) => a.claimCoverageScore - b.claimCoverageScore).slice(0, 3);
+  const rows = matrix
     .map(
       (item) => `<tr>
         <td><strong>${escapeHtml(item.owner)}</strong></td>
@@ -330,13 +333,48 @@ export function renderGapMatrix() {
     "/gap-matrix",
     `<section class="hero reveal">
       <div class="acard hero-panel">
-        <span class="eyebrow"><span class="dot"></span>Gap matrix</span>
-        <h1>See where coverage, freshness, and depth still break down.</h1>
-        <p class="hero-subtle">The gap matrix turns board and diligence proof into a readable inventory of claim coverage, freshness, evidence depth, and company-tag context.</p>
-        <div class="hero-nav">${routeNav("/gap-matrix")}</div>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <span class="eyebrow"><span class="dot"></span>Gap matrix</span>
+            <h1>See where claim coverage, proof freshness, and evidence depth still break down.</h1>
+            <p class="hero-subtle">The gap matrix turns board and diligence proof into a readable inventory of coverage, freshness, evidence depth, and company-tag context so leadership can fund the next proof work intentionally.</p>
+            <div class="hero-nav">${routeNav("/gap-matrix")}</div>
+            <div class="stat-grid">
+              <div class="stat"><label>Avg coverage</label><strong>${executiveSummary.averageClaimCoverage}</strong><span>Average modeled claim coverage score across the current proof estate.</span></div>
+              <div class="stat"><label>Avg freshness</label><strong>${executiveSummary.averageProofFreshness}</strong><span>How current the supporting proof remains before another refresh cycle is needed.</span></div>
+              <div class="stat"><label>Avg depth</label><strong>${executiveSummary.averageEvidenceDepth}</strong><span>Depth of the underlying supporting evidence, benchmark detail, and packet completeness.</span></div>
+              <div class="stat"><label>High findings</label><strong>${executiveSummary.highFindings}</strong><span>High-severity findings already visible in the proof inventory.</span></div>
+            </div>
+          </div>
+          <aside class="hero-aside">
+            <div class="acard">
+              <span class="metric-chip">Coverage pressure</span>
+              <h3>Weakest proof rows right now</h3>
+              <ul class="hero-mini-list">
+                ${weakestCoverage
+                  .map(
+                    (item) =>
+                      `<li><strong>${escapeHtml(item.audience)}</strong><span>coverage ${item.claimCoverageScore} · freshness ${item.proofFreshnessScore} · depth ${item.evidenceDepthScore}</span></li>`
+                  )
+                  .join("")}
+              </ul>
+            </div>
+            <div class="acard">
+              <span class="metric-chip">Why this matters</span>
+              <p>Thin coverage and stale evidence create the exact board-review loops that make proof work feel ad hoc. This route keeps the weak rows visible before they become another manual rescue sprint.</p>
+            </div>
+          </aside>
+        </div>
       </div>
     </section>
     <section class="sec reveal">
+      <div class="sec-head">
+        <span class="sec-num">01</span>
+        <div>
+          <h2 class="sec-title">Coverage table</h2>
+          <p class="sec-lead">Every row keeps one audience, one theme, and one score profile attached so the next proof investment can be prioritized rationally.</p>
+        </div>
+      </div>
       <div class="table-wrap">
         <table>
           <thead>
@@ -358,7 +396,10 @@ export function renderGapMatrix() {
 }
 
 export function renderReusePosture() {
-  const rows = reusePosture()
+  const posture = reusePosture();
+  const executiveSummary = summary();
+  const slowest = [...posture].sort((a, b) => b.reviewCycleDays - a.reviewCycleDays).slice(0, 3);
+  const rows = posture
     .map(
       (item) => `<tr>
         <td><strong>${escapeHtml(item.audience)}</strong></td>
@@ -378,13 +419,48 @@ export function renderReusePosture() {
     "/reuse-posture",
     `<section class="hero reveal">
       <div class="acard hero-panel">
-        <span class="eyebrow"><span class="dot"></span>Reuse posture</span>
-        <h1>Keep reuse safety, benchmarking, and source proof together.</h1>
-        <p class="hero-subtle">The reuse-posture view shows whether each packet can stand up to boards, buyers, and investors without another manual rewrite loop.</p>
-        <div class="hero-nav">${routeNav("/reuse-posture")}</div>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <span class="eyebrow"><span class="dot"></span>Reuse posture</span>
+            <h1>Keep reuse safety, benchmark confidence, and source proof together.</h1>
+            <p class="hero-subtle">The reuse-posture view shows whether each packet can stand up to boards, buyers, and investors without another manual rewrite loop or an avoidable review bottleneck.</p>
+            <div class="hero-nav">${routeNav("/reuse-posture")}</div>
+            <div class="stat-grid">
+              <div class="stat"><label>Avg reuse safety</label><strong>${executiveSummary.averageReuseSafety}</strong><span>How safely the average proof pack can be reused across buyer and board cycles.</span></div>
+              <div class="stat"><label>Avg benchmark confidence</label><strong>${executiveSummary.averageBenchmarkConfidence}</strong><span>Confidence that the packet has enough comparison depth to feel investable.</span></div>
+              <div class="stat"><label>Review cycle</label><strong>${executiveSummary.averageReviewCycleDays}</strong><span>Average modeled days required before a packet clears internal review.</span></div>
+              <div class="stat"><label>Reusable packs</label><strong>${executiveSummary.reusableProofPacks}</strong><span>Proof rooms already strong enough to travel cleanly today.</span></div>
+            </div>
+          </div>
+          <aside class="hero-aside">
+            <div class="acard">
+              <span class="metric-chip">Slow review paths</span>
+              <h3>Where reuse still stalls</h3>
+              <ul class="hero-mini-list">
+                ${slowest
+                  .map(
+                    (item) =>
+                      `<li><strong>${escapeHtml(item.audience)}</strong><span>${item.reviewCycleDays} review days · reuse ${item.reuseSafetyScore} · benchmark ${item.benchmarkConfidenceScore}</span></li>`
+                  )
+                  .join("")}
+              </ul>
+            </div>
+            <div class="acard">
+              <span class="metric-chip">Operator lens</span>
+              <p>If reuse safety is high but benchmark confidence is low, the packet is still operationally expensive. If review days are slow, proof still depends on a fragile human handoff.</p>
+            </div>
+          </aside>
+        </div>
       </div>
     </section>
     <section class="sec reveal">
+      <div class="sec-head">
+        <span class="sec-num">01</span>
+        <div>
+          <h2 class="sec-title">Reuse matrix</h2>
+          <p class="sec-lead">Each row keeps the audience, review time, source surfaces, and required claims in the same frame so reuse posture can be evaluated without guesswork.</p>
+        </div>
+      </div>
       <div class="table-wrap">
         <table>
           <thead>
@@ -407,35 +483,85 @@ export function renderReusePosture() {
 
 export function renderVerification() {
   const items = verification().map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+  const executiveSummary = summary();
   return pageFrame(
     "Verification",
     "Verification notes for the synthetic proof-gap surface, sample export, and read-only diligence workflow.",
     "/verification",
     `<section class="hero reveal">
       <div class="acard hero-panel">
-        <span class="eyebrow"><span class="dot"></span>Verification</span>
-        <h1>Verification posture stays explicit.</h1>
-        <p class="hero-subtle">This proof-gap surface is synthetic, read-only, and reproducible from the included sample export. The guardrails stay visible before the repo is shown externally.</p>
-        <div class="hero-nav">${routeNav("/verification")}</div>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <span class="eyebrow"><span class="dot"></span>Verification</span>
+            <h1>Verification posture stays explicit before this surface travels.</h1>
+            <p class="hero-subtle">This proof-gap surface is synthetic, read-only, and reproducible from the included sample export. The guardrails stay visible before the repo is shown externally or used as real diligence evidence.</p>
+            <div class="hero-nav">${routeNav("/verification")}</div>
+            <div class="stat-grid">
+              <div class="stat"><label>Proof packs</label><strong>${executiveSummary.items}</strong><span>Sample packets included in the export and surfaced on the routes.</span></div>
+              <div class="stat"><label>Generated</label><strong>${executiveSummary.items > 0 ? "Static" : "N/A"}</strong><span>All content is deterministically generated from repo fixtures and service logic.</span></div>
+              <div class="stat"><label>Surface mode</label><strong>Read-only</strong><span>No live board packets, customer data, or hidden backends are present in this repo.</span></div>
+              <div class="stat"><label>Verification notes</label><strong>${verification().length}</strong><span>Explicit guardrails preserved for anyone reviewing the sample.</span></div>
+            </div>
+          </div>
+          <aside class="hero-aside">
+            <div class="acard">
+              <span class="metric-chip">What is safe</span>
+              <p>Use this repo to show proof-scoring shape, route design, and operating assumptions. Do not represent it as audited customer diligence material.</p>
+            </div>
+            <div class="acard">
+              <span class="metric-chip">What is missing</span>
+              <p>No live telemetry, no private board packets, and no sealed diligence rooms are included here. Everything visible is synthetic and reproducible.</p>
+            </div>
+          </aside>
+        </div>
       </div>
     </section>
     <section class="sec reveal">
+      <div class="sec-head">
+        <span class="sec-num">01</span>
+        <div>
+          <h2 class="sec-title">Verification notes</h2>
+          <p class="sec-lead">These guardrails keep the sample surface useful without overstating what the repo proves.</p>
+        </div>
+      </div>
       <ul class="verification-list">${items}</ul>
     </section>`
   );
 }
 
 export function renderDocs() {
+  const executiveSummary = summary();
   return pageFrame(
     "Docs",
     "Product documentation for Vendor Proof Gap Monitor and its proof, gap, and reuse routes.",
     "/docs",
     `<section class="hero reveal">
       <div class="acard hero-panel">
-        <span class="eyebrow"><span class="dot"></span>Docs</span>
-        <h1>Vendor Proof Gap Monitor docs</h1>
-        <p class="hero-subtle">This repo packages board-safe proof monitoring into one readable surface: proof lane, gap matrix, reuse posture, and risk map.</p>
-        <div class="hero-nav">${routeNav("/docs")}</div>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <span class="eyebrow"><span class="dot"></span>Docs</span>
+            <h1>Vendor Proof Gap Monitor packages board-safe proof monitoring into one readable surface.</h1>
+            <p class="hero-subtle">This repo keeps proof lane, gap matrix, reuse posture, risk pressure, and verification in one coherent static product rather than another loose bundle of screenshots and README fragments.</p>
+            <div class="hero-nav">${routeNav("/docs")}</div>
+            <div class="stat-grid">
+              <div class="stat"><label>Routes</label><strong>6</strong><span>Primary static routes available in the current proofgap surface.</span></div>
+              <div class="stat"><label>API outputs</label><strong>8</strong><span>JSON payloads generated from the same sample proof set.</span></div>
+              <div class="stat"><label>Proof packs</label><strong>${executiveSummary.items}</strong><span>Current sample items carried through the generated packet.</span></div>
+              <div class="stat"><label>Readiness rail</label><strong>4 steps</strong><span>Verify, prerender, screenshots, and deploy keep the surface reproducible.</span></div>
+            </div>
+          </div>
+          <aside class="hero-aside">
+            <div class="acard">
+              <span class="metric-chip">System shape</span>
+              <h3>One renderer, six routes, one proof export</h3>
+              <p>The same fixture-driven sample powers HTML routes, JSON outputs, screenshots, and docs so the repo remains auditable and deterministic.</p>
+            </div>
+            <div class="acard">
+              <span class="metric-chip">Route map</span>
+              <div class="route-list">${routePills()}</div>
+            </div>
+          </aside>
+        </div>
       </div>
     </section>
     <section class="sec reveal">
