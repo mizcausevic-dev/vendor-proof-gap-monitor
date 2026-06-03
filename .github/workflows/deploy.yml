@@ -59,15 +59,17 @@ jobs:
 
       - name: Verify build output
         run: |
-          # Find the build output dir — Vite default is dist/
-          if [ -d "dist" ]; then
+          # Prefer prerendered static output when present.
+          if [ -d "site" ]; then
+            DEPLOY_DIR="site"
+          elif [ -d "dist-static" ]; then
+            DEPLOY_DIR="dist-static"
+          elif [ -d "dist" ]; then
             DEPLOY_DIR="dist"
           elif [ -d "build" ]; then
             DEPLOY_DIR="build"
-          elif [ -d "site" ]; then
-            DEPLOY_DIR="site"
           else
-            echo "FAIL: No dist/, build/, or site/ directory produced"
+            echo "FAIL: No site/, dist-static/, dist/, or build/ directory produced"
             exit 1
           fi
           echo "DEPLOY_DIR=$DEPLOY_DIR" >> $GITHUB_ENV
